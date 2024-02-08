@@ -11,28 +11,17 @@ lazy_static! {
     static ref POOL: r2d2::Pool<ConnectionManager<PgConnection>> = {
         let db_url = env::var("DATABASE_URL").expect("Database url not set");
         let manager = ConnectionManager::<PgConnection>::new(db_url);
-        // Refer to the `r2d2` documentation for more methods to use
-        // when building a connection pool
         Pool::builder()
             .test_on_check_out(true)
             .build(manager)
             .expect("Could not build connection pool")
-        // r2d2::Pool::new(manager).unwrap()
     };
 }
 
-pub fn establish_connection() -> Pool {
+pub fn establish_connection() {
     dotenv().ok();
+    lazy_static::initialize(&POOL);
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-
-    let manager = ConnectionManager::<PgConnection>::new(database_url);
-    // Refer to the `r2d2` documentation for more methods to use
-    // when building a connection pool
-    Pool::builder()
-        .test_on_check_out(true)
-        .build(manager)
-        .expect("Could not build connection pool")
 }
 
 pub fn connection() -> PooledConnection<ConnectionManager<PgConnection>> {
