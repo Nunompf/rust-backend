@@ -1,20 +1,13 @@
 use crate::db::domain::person::*;
 use crate::db::domain::wallet::*;
-use crate::db::schema::wallet::{id, its};
+
 use crate::error_handler::CustomError;
-use crate::db::connection::{self, connection};
+use crate::db::connection::connection;
 
 use actix_web::{ get, post,
-    http::{
-        header::{self, ContentType},
-        Method, StatusCode,
-    },
-    web, App, Either, HttpRequest, HttpResponse, Result,
+    web, HttpResponse, Result,
 };
 
-use diesel::dsl::today;
-use diesel::expression::is_aggregate::No;
-use diesel::result::Error;
 use diesel::Connection;
 
 type PgConnection = r2d2::PooledConnection<diesel::r2d2::ConnectionManager<diesel::prelude::PgConnection>>;
